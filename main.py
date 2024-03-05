@@ -2,6 +2,7 @@
 import colorama
 import readchar
 import random
+import sys
 
 colorama.just_fix_windows_console()
 
@@ -9,10 +10,6 @@ w, h = 10, 10
 m = 10
 
 up = lambda x: f"\033[{x}A"
-
-board = [[False for _ in range(w)] for _ in range(h)]
-fog = [[True for _ in range(w)] for _ in range(h)]
-flags = [[False for _ in range(w)] for _ in range(h)]
 
 first_move = True
 
@@ -56,7 +53,8 @@ def count_neighbours(cur):
     for i in range(-1, 2):
         for j in range(-1, 2):
             if i != 0 or j != 0:
-                if cur[1] + i >= 0 and cur[0] + j >= 0 and cur[1] + i < w and cur[0] + j < h:
+                if cur[1] + i >= 0 and cur[0] + j >= 0 and cur[1] + i < h and cur[0] + j < w:
+                    
                     if board[cur[1] + i][cur[0] + j]: neighbours += 1
 
     return neighbours
@@ -80,7 +78,7 @@ get_is_fog = lambda cur: fog[cur[1]][cur[0]]
 get_is_flag = lambda cur: flags[cur[1]][cur[0]]
 
 def open_on(cur):
-    if not (cur[0] >= 0 and cur[1] >= 0 and cur[0] < h and cur[1] < w): return
+    if not (cur[0] >= 0 and cur[1] >= 0 and cur[0] < w and cur[1] < h): return
     if not get_is_fog(cur): return
     
     fog[cur[1]][cur[0]] = False
@@ -135,7 +133,59 @@ def open_fog():
 
     open_on(cur)
 
+def print_usage():
+    print(f"=> Usage: {program} [<flag> <value>]")
+    print("-> Flags:")
+    print("->     -w <int>      Set board width")
+    print("->     -h <int>      Set board height")
+    print("->     -m <int>      Set mine count")
+
+def isint(string):
+    try:
+        int(string)
+        return True
+    except:
+        return False
+
 if __name__ == "__main__":
+    program = sys.argv.pop(0)
+
+    while len(sys.argv) > 0:
+        flag = sys.argv.pop(0)
+        
+        if len(sys.argv) == 0:
+            print("=> Error: Got flag but did not got any value")
+            print_usage()
+            exit(1)
+        
+        if flag == "-w":
+            w = sys.argv.pop(0)
+            if not isint(w):
+                print(f"=> Error: \"{w}\" is not a proper integer")
+                exit(1)
+            w = int(w)
+        elif flag == "-h":
+            h = sys.argv.pop(0)
+            if not isint(h):
+                print(f"=> Error: \"{h}\" is not a proper integer")
+                exit(1)
+            h = int(h)
+        elif flag == "-m":
+            m = sys.argv.pop(0)
+            if not isint(m):
+                print(f"=> Error: \"{m}\" is not a proper integer")
+                exit(1)
+            m = int(m)
+
+        else:
+            print(f"=> Error: Unknown flag \"{flag}\"")
+            print_usage()
+            exit()
+    
+    board = [[False for _ in range(w)] for _ in range(h)]
+    fog = [[True for _ in range(w)] for _ in range(h)]
+    flags = [[False for _ in range(w)] for _ in range(h)]
+
     print("=> Config:")
     print(f"->     Size: {w}x{h}; Mines: {m}")
     print("=> Controls:")
