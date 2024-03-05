@@ -21,7 +21,7 @@ def print_board():
             print("[" if cur[0] == x and cur[1] == y else " ", end="")
             
             if flags[y][x]:
-                if not board[y][x] and not fog[y][x]:
+                if not board[y][x] and (not fog[y][x] or debug):
                     print("\033[31mF\033[0m", end="")
                 else:
                     print("\033[33mF\033[0m", end="")
@@ -29,7 +29,11 @@ def print_board():
                 if not fog[y][x]:
                     if j: print("\033[31m#\033[0m", end="")
                     else: print(" " if count_neighbours([x, y]) == 0 else f"{str(count_neighbours([x, y]))}", end="")
-                else: print(".", end="")
+                else:
+                    if debug:
+                        print("\033[31m.\033[0m" if board[y][x] else ".", end="")
+                    else:
+                        print(".", end="")
 
             print("]" if cur[0] == x and cur[1] == y else " ", end="")
         print()
@@ -134,7 +138,7 @@ def open_fog():
     open_on(cur)
 
 def print_usage():
-    print(f"=> Usage: {program} [<flag> <value>]")
+    print(f"=> Usage: {program} [-d] [<flag> <value>]")
     print("-> Flags:")
     print("->     -w <int>      Set board width")
     print("->     -h <int>      Set board height")
@@ -147,12 +151,18 @@ def isint(string):
     except:
         return False
 
+debug = False
+
 if __name__ == "__main__":
     program = sys.argv.pop(0)
 
     while len(sys.argv) > 0:
         flag = sys.argv.pop(0)
         
+        if flag == "-d":
+            debug = True
+            continue
+
         if len(sys.argv) == 0:
             print("=> Error: Got flag but did not got any value")
             print_usage()
@@ -188,6 +198,7 @@ if __name__ == "__main__":
 
     print("=> Config:")
     print(f"->     Size: {w}x{h}; Mines: {m}")
+    if debug: print("->     ~~ DEBUG MODE ~~")
     print("=> Controls:")
     print("->     [WASD] or [v]/[^]/[<]/[>] - move the cursor")
     print("->     [Space] - Open a cell")
