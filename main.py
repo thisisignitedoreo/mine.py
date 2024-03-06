@@ -207,7 +207,8 @@ if __name__ == "__main__":
     randomize_mines()
     while True:
         print_board()
-        key = readchar.readkey()
+        try: key = readchar.readkey()
+        except KeyboardInterrupt: exit()
 
         if key in "wasd" or key in (readchar.key.DOWN, readchar.key.UP, readchar.key.LEFT, readchar.key.RIGHT):
             move_cursor(key)
