@@ -162,7 +162,8 @@ def print_help():
           "-> red it means that this cell is already opened and\n"
           "-> there are no mine in it, so you can safely remove it.\n"
           "-> Thats all - now just start a program without any\n"
-          "-> arguments to start a standart (10x10#10) game.")
+          "-> arguments to start a standart (10x10#10) game.\n"
+          "=> Note: if you need program usage use -u flag")
 
 def isint(string):
     try:
