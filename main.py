@@ -138,11 +138,31 @@ def open_fog():
     open_on(cur)
 
 def print_usage():
-    print(f"=> Usage: {program} [-d] [<flag> <value>]")
+    print(f"=> Usage: {program} [-h] [-u] [-d] [<flag> <value>]")
     print("-> Flags:")
     print("->     -w <int>      Set board width")
     print("->     -h <int>      Set board height")
     print("->     -m <int>      Set mine count")
+
+def print_help():
+    print("=> How to play minesweeper:\n"
+          "-> You are given a board, with randomly put mines in it.\n"
+          "-> Your objective is to find all these mines and flag\n"
+          "-> them. Remember that your first click is not a mine.\n"
+          "-> Numbers on empty cells indicate how many mines around\n"
+          "-> it (8x8 square, if cell is empty there are no mines).\n"
+          "-> For example lets look at this situation:\n"
+          " > |           |\n"
+          " > |     1  1  |\n"
+          " > |     1 [.] |\n"
+          "-> We can for sure say that there is a mine at cursor,\n"
+          "-> because there are exactly one mine around the cell\n"
+          "-> at the center. To flag the cell press [F] - this will\n"
+          "-> place a flag at position of cursor. Also - if flag is\n"
+          "-> red it means that this cell is already opened and\n"
+          "-> there are no mine in it, so you can safely remove it.\n"
+          "-> Thats all - now just start a program without any\n"
+          "-> arguments to start a standart (10x10#10) game.")
 
 def isint(string):
     try:
@@ -158,7 +178,15 @@ if __name__ == "__main__":
 
     while len(sys.argv) > 0:
         flag = sys.argv.pop(0)
+
+        if flag == "-h":
+            print_help()
+            exit()
         
+        if flag == "-u":
+            print_usage()
+            exit()
+
         if flag == "-d":
             debug = True
             continue
@@ -200,7 +228,7 @@ if __name__ == "__main__":
     print(f"->     Size: {w}x{h}; Mines: {m}")
     if debug: print("->     ~~ DEBUG MODE ~~")
     print("=> Controls:")
-    print("->     [WASD] or [v]/[^]/[<]/[>] - move the cursor")
+    print("->     [WASD] or [v]/[^]/[<]/[>] - Move the cursor")
     print("->     [Space] - Open a cell")
     print("->     [F] - Place a flag")
     print("->     [Q] - Exit\n")
